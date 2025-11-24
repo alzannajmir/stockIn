@@ -6,11 +6,11 @@ export default function DashboardPage() {
   const [userLogin, setUserLogin] = useState("");
 
   const menus = [
-    { name: "Stock In", icon: "✏️", path: "/stock-in" },
+    { name: "Stock In", icon: "✏️", path: "/stockin" },
     { name: "Stock Out", icon: "🛒", path: "/stock-out" },
     { name: "Orders", icon: "📈", path: "/orders" },
     { name: "Report", icon: "📊", path: "/report" },
-    { name: "Distributor", icon: "🚚", path: "/distributor" },
+    { name: "Distributor", icon: "🚚", path: "/" },
     { name: "Merk", icon: "📦", path: "/merk" },
   ];
 
@@ -41,7 +41,7 @@ export default function DashboardPage() {
             🔍
             <input
               type="text"
-              placeholder="Search"
+              placeholder="Search..."
               className="ml-2 outline-none w-full bg-transparent text-sm"
             />
           </div>
@@ -89,7 +89,7 @@ export default function DashboardPage() {
         <div className="mt-10">
           <button
             onClick={handleLogout}
-            className="px-5 py-2 border border-gray-400 rounded-lg text-sm hover:bg-gray-100 transition"
+            className="px-5 py-2 bg-red-500 text-white rounded-lg text-sm hover:bg-red-300 transition"
           >
             ← Logout
           </button>

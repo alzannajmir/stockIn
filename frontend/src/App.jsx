@@ -6,13 +6,13 @@ import {
   Link,
   Navigate,
 } from "react-router-dom";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./app.css";
-import Login from "./pages/login";
+import Login from "./pages/Login";
 import User from "./pages/user";
 import HomeScreen from "./pages/Index";
 import DashboardPage from "./pages/Dashboard";
+import StockIn from "./pages/Stockin";
+import StockOut from "./pages/StockOut"; 
 
 function App() {
   function ProtectedRoute({ children }) {
@@ -24,7 +24,7 @@ function App() {
 
     return children;
   }
-
+  
   return (
     <Router>
       {/* NAVBAR */}
@@ -49,6 +49,8 @@ function App() {
           }
         />
         <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/stockin" element={<StockIn />} />
+        <Route path="/stockout" element={<StockOut />} />
       </Routes>
     </Router>
   );
