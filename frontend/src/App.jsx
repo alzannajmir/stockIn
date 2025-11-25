@@ -12,7 +12,9 @@ import User from "./pages/user";
 import HomeScreen from "./pages/Index";
 import DashboardPage from "./pages/Dashboard";
 import StockIn from "./pages/Stockin";
-import StockOut from "./pages/StockOut"; 
+import StockOut from "./pages/StockOut";
+import Register from "./pages/Register";
+import Report from "./pages/Report";
 
 function App() {
   function ProtectedRoute({ children }) {
@@ -24,7 +26,7 @@ function App() {
 
     return children;
   }
-  
+
   return (
     <Router>
       {/* NAVBAR */}
@@ -50,7 +52,23 @@ function App() {
         />
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/stockin" element={<StockIn />} />
-        <Route path="/stockout" element={<StockOut />} />
+        <Route path="/register" element={<Register />} />
+        <Route
+          path="/stock-out"
+          element={
+            <ProtectedRoute>
+              <StockOut />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/report"
+          element={
+            <ProtectedRoute>
+              <Report />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </Router>
   );

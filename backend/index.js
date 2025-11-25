@@ -111,94 +111,24 @@
 // app.listen(port, () => {
 //   console.log(`Example app listening on port ${port}`);
 // });
+// backend/index.js
+require("dotenv").config(); // Load variabel dari .env
+const express = require("express");
+const cors = require("cors");
+const authRoutes = require("./routes/authRoutes");
+const stockRoutes = require("./routes/stockRoutes");
 
-var express = require("express");
-var cors = require("cors");
-var mysql = require("mysql2");
+const app = express();
+const PORT = process.env.PORT || 5000;
 
-var app = express();
-const port = 3000;
+// Middleware
+app.use(cors()); // Izinkan request dari frontend
+app.use(express.json()); // Izinkan server menerima JSON
 
-// middleware
-app.use(cors());
-app.use(express.json());
+// Routes
+app.use("/api/auth", authRoutes);
+app.use("/api/stocks", stockRoutes); // Semua route di authRoutes akan diakses dengan prefix /api/auth
 
-// koneksi database
-const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",   // sesuaikan kalau ada password
-  database: "stokin_simple"
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
-
-db.connect((err) => {
-  if (err) {
-    console.error("❌ Koneksi ke database gagal:", err.message);
-  } else {
-    console.log("✅ Berhasil terhubung ke MySQL");
-  }
-});
-
-
-// GET semua user
-app.get("/users", (req, res) => {
-  const sql = "SELECT id, nama, email, telp FROM users";
-
-  db.query(sql, (err, result) => {
-    if (err) {
-      return res.status(500).json({
-        status: false,
-        message: "Gagal ambil data",
-        error: err.message
-      });
-    }
-
-    res.json({
-      status: true,
-      data: result
-    });
-  });
-});
-
-
-// LOGIN API
-app.post("/login", (req, res) => {
-  const { email, password } = req.body;
-
-  const sql = "SELECT * FROM users WHERE email = ? AND password = ?";
-
-  db.query(sql, [email, password], (err, result) => {
-    if (err) {
-      return res.status(500).json({
-        status: false,
-        message: "Server error"
-      });
-    }
-
-    if (result.length > 0) {
-      const user = result[0];
-
-      res.json({
-        status: true,
-        message: "Login berhasil",
-        user: {
-          id: user.id,
-          nama: user.nama,
-          email: user.email,
-          telp: user.telp
-        }
-      });
-    } else {
-      res.json({
-        status: false,
-        message: "Email atau password salah"
-      });
-    }
-  });
-});
-
-app.listen(port, () => {
-  console.log(`✅ Server berjalan di http://localhost:${port}`);
-});
-
-

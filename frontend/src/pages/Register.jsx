@@ -1,43 +1,39 @@
-import { useEffect, useState } from "react";
+// frontend/src/components/Register.jsx
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
+import { toast } from "react-toastify";
 
-export default function Login() {
+export default function Register() {
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  // Cek apakah user sudah login, jika ya, redirect ke dashboard
-  useEffect(() => {
-    const userLoggedIn = localStorage.getItem("userLogin");
-    if (userLoggedIn) {
-      navigate("/dashboard"); // Ganti dengan route dashboard Anda
-    }
-  }, [navigate]);
-
-  function signIn(e) {
+  function handleRegister(e) {
     e.preventDefault();
 
     axios
-      .post("http://localhost:5000/api/auth/login", {
+      .post("http://localhost:5000/api/auth/register", {
+        username,
         email,
         password,
       })
       .then((response) => {
-        // Jika login berhasil
-        toast.success("Login berhasil!");
+        // Jika registrasi berhasil
+        toast.success(
+          response.data.message || "Registrasi berhasil! Silakan login."
+        );
 
-        // Simpan data user ke localStorage
-        localStorage.setItem("userLogin", JSON.stringify(response.data.user));
-
-        // Redirect ke halaman dashboard
-        navigate("/dashboard"); // Ganti dengan route dashboard Anda
+        // Redirect ke halaman login setelah 2 detik
+        setTimeout(() => {
+          navigate("/");
+        }, 2000);
       })
       .catch((error) => {
-        // Jika login gagal
+        // Jika registrasi gagal
         const errorMessage =
-          error.response?.data?.message || "Email atau password salah";
+          error.response?.data?.message || "Registrasi gagal. Coba lagi.";
         toast.error(errorMessage);
       });
   }
@@ -47,13 +43,28 @@ export default function Login() {
       <div className="w-full mt-70">
         <div className="flex flex-col justify-center px-6 py-12 lg:px-8">
           <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-            <h2 className="mt-10 text-center italic text-2xl/9 font-bold tracking-tight text-red-500">
-              "StockIn <span className="text-blue-500">WarungKu" </span>
+            <h2 className="mt-10 text-center italic text-2xl/9 font-bold tracking-tight text-gray-500">
+              "StockIn <span className="text-green-500">WarungKu" </span>
             </h2>
           </div>
 
           <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-            <form onSubmit={signIn} className="space-y-6">
+            <form onSubmit={handleRegister} className="space-y-6">
+              <div>
+                <div className="mt-2">
+                  <input
+                    id="username"
+                    name="username"
+                    type="text"
+                    required
+                    placeholder="Username..."
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    className="block outline-slate-500 w-full rounded-md bg-white/5 px-3 py-1.5 text-base outline-1 -outline-offset-1 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
+                  />
+                </div>
+              </div>
+
               <div>
                 <div className="mt-2">
                   <input
@@ -77,7 +88,7 @@ export default function Login() {
                     name="password"
                     type="password"
                     required
-                    autoComplete="current-password"
+                    autoComplete="new-password"
                     placeholder="Password..."
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -85,28 +96,20 @@ export default function Login() {
                   />
                 </div>
               </div>
-              <div>
-                <a
-                  href="#"
-                  className="text-sm ml-65 text-black hover:text-indigo-300 "
-                >
-                  Forgot password?
-                </a>
-              </div>
 
               <div className="flex gap-4">
                 <button
                   type="submit"
-                  className="flex-1 rounded-md bg-blue-500 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  className="flex-1 rounded-md bg-green-500 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-green-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
                 >
-                  Login
+                  Daftar
                 </button>
                 <button
-                  type="button" // Ubah type agar tidak submit form
-                  onClick={() => navigate("/Register")} // Arahkan ke halaman register
-                  className="flex-1 rounded-md bg-red-500 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+                  type="button"
+                  onClick={() => navigate("/")}
+                  className="flex-1 rounded-md bg-gray-500 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-gray-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
                 >
-                  Register
+                  Batal
                 </button>
               </div>
             </form>
