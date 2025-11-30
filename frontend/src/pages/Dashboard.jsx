@@ -8,9 +8,9 @@ export default function DashboardPage() {
   const menus = [
     { name: "Stock In", icon: "✏️", path: "/stockin" },
     { name: "Stock Out", icon: "🛒", path: "/stock-out" },
-    { name: "Orders", icon: "📈", path: "/orders" },
+    { name: "Orders", icon: "📈", path: "/order" },
     { name: "Report", icon: "📊", path: "/report" },
-    { name: "Distributor", icon: "🚚", path: "/" },
+    { name: "Distributor", icon: "🚚", path: "/distributor" },
     { name: "Merk", icon: "📦", path: "/merk" },
   ];
 

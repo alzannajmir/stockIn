@@ -67,15 +67,28 @@ export default function StockOut() {
     setIsReduceModalOpen(true);
   };
 
-  // Fungsi untuk mengurangi stok
+  // Fungsi untuk mengurangi stok (SUDAH DIPERBAIKI)
   const handleReduceStock = async () => {
+    // Ambil data user yang sedang login dari localStorage
+    const userLoginData = JSON.parse(localStorage.getItem("userLogin"));
+
+    // Pastikan user data dan ID ada
+    if (!userLoginData || !userLoginData.id) {
+      toast.error("User tidak teridentifikasi, silakan login ulang.");
+      return;
+    }
+
     try {
       const response = await fetch(
         `http://localhost:5000/api/stocks/${selectedItemId}/reduce`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ quantity: parseInt(reduceQuantity) }),
+          // Kirim quantity dan user_id ke backend
+          body: JSON.stringify({
+            quantity: parseInt(reduceQuantity),
+            user_id: userLoginData.id, // <-- PERUBAHAN PENTING DI SINI
+          }),
         }
       );
 

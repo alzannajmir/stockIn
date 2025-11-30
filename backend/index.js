@@ -117,6 +117,8 @@ const express = require("express");
 const cors = require("cors");
 const authRoutes = require("./routes/authRoutes");
 const stockRoutes = require("./routes/stockRoutes");
+const orderRoutes = require("./routes/orderRoutes");
+const distributorRoutes = require("./routes/distributorRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -127,7 +129,9 @@ app.use(express.json()); // Izinkan server menerima JSON
 
 // Routes
 app.use("/api/auth", authRoutes);
-app.use("/api/stocks", stockRoutes); // Semua route di authRoutes akan diakses dengan prefix /api/auth
+app.use("/api/stocks", stockRoutes);
+app.use("/api/orders", orderRoutes);
+app.use("/api/distributors", distributorRoutes); // Semua route di authRoutes akan diakses dengan prefix /api/auth
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

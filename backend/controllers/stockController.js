@@ -111,10 +111,10 @@ exports.getStockReport = (req, res) => {
   });
 };
 
-// Fungsi untuk mengurangi stok (UPDATE)
+// Fungsi untuk mengurangi stok (UPDATE + LOG)
 exports.reduceStock = (req, res) => {
   const { id } = req.params; // ID barang
-  const { quantity } = req.body; // Jumlah yang akan dikurangi
+  const { quantity, user_id } = req.body; // Jumlah yang dikurangi dan ID user
 
   if (!quantity || quantity <= 0) {
     return res
@@ -122,23 +122,34 @@ exports.reduceStock = (req, res) => {
       .json({ message: "Jumlah yang dikurangi harus lebih dari 0" });
   }
 
-  // Query untuk mengurangi stok sekaligus mendapatkan data stok lama
-  const query =
+  // Query untuk mengurangi stok
+  const updateQuery =
     "UPDATE stocks SET jumlah_stok = jumlah_stok - ? WHERE id = ? AND jumlah_stok >= ?";
 
-  db.query(query, [quantity, id, quantity], (err, result) => {
+  db.query(updateQuery, [quantity, id, quantity], (err, result) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ message: "Gagal mengurangi stok" });
     }
 
     if (result.affectedRows === 0) {
-      // Jika tidak ada baris yang terpengaruh, berarti stok tidak mencukupi atau ID tidak ditemukan
       return res
         .status(400)
         .json({ message: "Stok tidak mencukupi atau barang tidak ditemukan" });
     }
 
-    res.status(200).json({ message: "Stok berhasil dikurangi" });
+    // Jika stok berhasil dikurangi, BUAT LOG
+    const logQuery =
+      "INSERT INTO stock_out_logs (stock_id, quantity, user_id) VALUES (?, ?, ?)";
+    db.query(logQuery, [id, quantity, user_id], (logErr) => {
+      if (logErr) {
+        // Jika logging gagal, stok sudah berkurang tapi tidak tercatat. Ini masalah serius.
+        console.error("Gagal membuat log:", logErr);
+        return res.status(500).json({
+          message: "Stok berhasil dikurangi, tetapi gagal mencatat log.",
+        });
+      }
+      res.status(200).json({ message: "Stok berhasil dikurangi dan dicatat." });
+    });
   });
 };

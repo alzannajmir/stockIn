@@ -12,9 +12,11 @@ import User from "./pages/user";
 import HomeScreen from "./pages/Index";
 import DashboardPage from "./pages/Dashboard";
 import StockIn from "./pages/Stockin";
-import StockOut from "./pages/StockOut";
+import StockOut from "./pages/Stockout";
 import Register from "./pages/Register";
 import Report from "./pages/Report";
+import Order from "./pages/Order";
+import Distributor from "./pages/Distributor";
 
 function App() {
   function ProtectedRoute({ children }) {
@@ -66,6 +68,22 @@ function App() {
           element={
             <ProtectedRoute>
               <Report />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/order"
+          element={
+            <ProtectedRoute>
+              <Order />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/distributor"
+          element={
+            <ProtectedRoute>
+              <Distributor />
             </ProtectedRoute>
           }
         />
